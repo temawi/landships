@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 public class UIManager {
     static String text = "";
     static String text2 = "";
+    static String[] upgradeText = {"0", "1", "2", "3", "4", "MAX"};
 
     static BitmapFont font;
     static SpriteBatch batch;
@@ -27,9 +28,10 @@ public class UIManager {
         // right now, we have fps, hp, damage, traffic (in/out), dispersion,
         // top speed, and camera zoom
         text = addText("fps: " + Gdx.graphics.getFramesPerSecond(), text);
-        text = addText("dmg: " + (int)Game.tank.damage + "-" + (int)Game.tank.maxDamage, text);
-        text = addText("disp: " + (int)Game.tank.dispersion, text);
+        text = addText("damage: " + (int)Game.tank.damage + "-" + (int)Game.tank.maxDamage, text);
+        text = addText("dispersion: " + (int)Game.tank.dispersion, text);
         text = addText("speed: " + (int)Game.tank.speed * 100, text);
+        text = addText("reload: " + (int)Game.tank.reloadTime + "s", text);
 
         text2 = addText("zoom: " + (int)Game.camera.zoom, text2);
         text2 = addText("in: " + Game.handler.inBytes, text2);
@@ -74,6 +76,16 @@ public class UIManager {
         batch.begin();
         font.draw(batch, text, 0, Gdx.graphics.getHeight() - 16);
         font.draw(batch, text2, 0, Gdx.graphics.getHeight() - 32);
+
+        font.draw(batch, "Upgrade Points: " + Game.tank.upgradePts, 0, 52);
+        font.draw(batch,
+                " (F1) Firepower: " + upgradeText[Game.tank.upgradeFirepower] +
+                        " (F2) Armor: " + upgradeText[Game.tank.upgradeArmor] +
+                        " (F3) Handling: " + upgradeText[Game.tank.upgradeHandling] +
+                        " (F4) Mobility: " + upgradeText[Game.tank.upgradeMobility] +
+                        " (F5) Optics: " + upgradeText[Game.tank.upgradeOptics],
+                0,
+                32);
         batch.end();
     }
 }

@@ -68,6 +68,15 @@ public class Shell extends Thing {
                             Game.tanks.indexOf(t),
                             damage
                     ).build());
+
+                    // if you killed the tank with this shot
+                    if(t.hp - damage < 1) {
+                        // award a full upgrade worth of points
+                        Game.tank.upgradePts += 5;
+                    } else {
+                        // award 1/5 upgrade worth of points
+                        Game.tank.upgradePts += 1;
+                    }
                 }
             }
         }

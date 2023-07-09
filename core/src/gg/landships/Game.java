@@ -118,7 +118,7 @@ public class Game extends ApplicationAdapter implements InputProcessor {
 		// fill the tank list with a bunch of puppet tanks
 		// these are controlled by the net commands from the server
 		for(int i = 0; i < 10; i++) {
-			Tank t = new Tank("test_hull.png", "test_turret.png");
+			Tank t = new Tank("t1_hull.png", "t1_turret.png");
 			tanks.add(t);
 			tankHashMap.put(t, i);
 		}
@@ -261,6 +261,47 @@ public class Game extends ApplicationAdapter implements InputProcessor {
 
 	@Override
 	public boolean keyUp(int keycode) {
+		// assign the accrued upgrade points into upgrades
+
+		if(tank.upgradePts >= 5) {
+			switch (keycode) {
+				case Input.Keys.F1:
+					if(tank.upgradeFirepower + 1 <= 5) {
+						tank.upgradeFirepower++;
+						tank.upgradePts -= 5;
+						tank.updateStats();
+					}
+					break;
+				case Input.Keys.F2:
+					if(tank.upgradeArmor + 1 <= 5) {
+						tank.upgradeArmor++;
+						tank.upgradePts -= 5;
+						tank.updateStats();
+					}
+					break;
+				case Input.Keys.F3:
+					if(tank.upgradeHandling + 1 <= 5) {
+						tank.upgradeHandling++;
+						tank.upgradePts -= 5;
+						tank.updateStats();
+					}
+					break;
+				case Input.Keys.F4:
+					if(tank.upgradeMobility + 1 <= 5) {
+						tank.upgradeMobility++;
+						tank.upgradePts -= 5;
+						tank.updateStats();
+					}
+					break;
+				case Input.Keys.F5:
+					if(tank.upgradeOptics + 1 <= 5) {
+						tank.upgradeOptics++;
+						tank.upgradePts -= 5;
+						tank.updateStats();
+					}
+					break;
+			}
+		}
 		return false;
 	}
 
@@ -293,6 +334,8 @@ public class Game extends ApplicationAdapter implements InputProcessor {
 	public boolean scrolled(float amountX, float amountY) {
 		if(camera.zoom + amountY > 1.0f && camera.zoom + amountY <= tank.maxZoom) {
 			camera.zoom += amountY;
+
+			// scale the font up, so it stays readable while you are zoomed far out
 			font.getData().setScale(font.getScaleX() + amountY);
 		}
 		return false;

@@ -29,6 +29,13 @@ public class Tank extends Thing {
     long nextShot;
     long respawnTick;
 
+    int upgradeFirepower;
+    int upgradeMobility;
+    int upgradeHandling;
+    int upgradeArmor;
+    int upgradeOptics;
+    int upgradePts;
+
     Tank(String s, String ts) {
         // init the hull sprite and create the turret
         sprite = new Sprite(new Texture(s));
@@ -40,11 +47,12 @@ public class Tank extends Thing {
         turretSpeed = 1.2f;
         turnSpeed = 2f;
         dispersion = 1f;
-        damage = 50;
+        damage = 40;
         shotVelocity = 35f;
-        maxDamage = 65;
-        reloadTime = 1.5f;
+        maxDamage = 55;
+        reloadTime = 0.8f;
         maxZoom = 12.0f;
+        upgradePts = 125;
 
         // whew finally done with that
 
@@ -202,6 +210,36 @@ public class Tank extends Thing {
         // add to lists finally
         Game.renderList.add(newShell);
         Game.shells.add(newShell);
+    }
+
+    public void updateStats() {
+        // firepower upgrade - more damage, but longer reload
+        // also, it increases the max damage at a faster rate
+        damage = 40 + (25 * upgradeFirepower);
+        maxDamage = 55 + (30 * upgradeFirepower);
+        reloadTime = 0.8f + (0.65f * upgradeFirepower);
+
+        // armor upgrade - more hp, less speed
+        hp = 350 + (65 * upgradeArmor);
+        speed = 100 - (8 * upgradeArmor);
+
+        // mobility upgrade - faster driving speed
+        speed = 1f + (0.2f * upgradeMobility);
+
+        // handling upgrade - less dispersion, faster turret, faster steering
+        dispersion = 1f - (0.1f * upgradeHandling);
+        turretSpeed = 1.2f + (0.15f * upgradeHandling);
+        turnSpeed = 2f + (0.2f * upgradeHandling);
+
+        // optics upgrade - larger zoom out to help long range shots
+        maxZoom = 12f + upgradeOptics;
+
+        // .... idk if this will work
+        if(upgradeFirepower > 0)
+            turret.sprite.setTexture(new Texture("t" + upgradeFirepower + "_turret.png"));
+
+        if(upgradeArmor > 0)
+            sprite.setTexture(new Texture("t" + upgradeArmor + "_hull.png"));
     }
 
     public void dispose() {
