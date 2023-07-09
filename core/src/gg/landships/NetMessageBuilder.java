@@ -24,6 +24,9 @@ public class NetMessageBuilder {
         object.put("rot", r);
         object.put("trot", tr);
         object.put("type", 1);
-        return object.toJSONString();
+
+        String string = object.toJSONString();
+        Game.handler.outBytes += string.length();
+        return string;
     }
 }

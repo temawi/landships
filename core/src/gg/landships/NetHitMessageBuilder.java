@@ -18,6 +18,9 @@ public class NetHitMessageBuilder {
         object.put("hit_id", this.hitId);
         object.put("damage", this.damage);
         object.put("type", 2);
-        return object.toJSONString();
+
+        String string = object.toJSONString();
+        Game.handler.outBytes += string.length();
+        return string;
     }
 }
