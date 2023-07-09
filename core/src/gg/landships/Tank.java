@@ -105,6 +105,15 @@ public class Tank extends Thing {
 
     public void destroy() {
         Game.renderList.add(new DestroyedTank(sprite.getX(), sprite.getY(), sprite.getRotation()));
+
+        upgradeFirepower = 0;
+        upgradeArmor = 0;
+        upgradeHandling = 0;
+        upgradeMobility = 0;
+        upgradeOptics = 0;
+        upgradePts = 0;
+        handleUpgrades();
+
         respawnTick = ticks + 120;
     }
 
@@ -212,6 +221,12 @@ public class Tank extends Thing {
         Game.shells.add(newShell);
     }
 
+    public void handleUpgrades() {
+        updateStats();
+        updateTextures();
+        reportUpgrades();
+    }
+
     public void updateStats() {
         // firepower upgrade - more damage, but longer reload
         // also, it increases the max damage at a faster rate
@@ -233,8 +248,15 @@ public class Tank extends Thing {
 
         // optics upgrade - larger zoom out to help long range shots
         maxZoom = 12f + upgradeOptics;
+    }
 
-        // .... idk if this will work
+    public void reportUpgrades() {
+        // tell everyone that we upgraded, so they can see the changes
+        Game.handler.write(new NetUpgradeMessageBuilder(
+                upgradeFirepower, upgradeArmor,
+                upgradeHandling, upgradeMobility, upgradeOptics).build());
+    }
+    public void updateTextures() {
         if(upgradeFirepower > 0)
             turret.sprite.setTexture(new Texture("t" + upgradeFirepower + "_turret.png"));
 

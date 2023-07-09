@@ -43,6 +43,7 @@ public class Game extends ApplicationAdapter implements InputProcessor {
 	static TiledMap map;
 	static OrthogonalTiledMapRenderer renderer;
 	static NetHandler handler;
+	static long ticks;
 
 	public void controls() {
 		if (Gdx.input.isKeyPressed(Input.Keys.A)) {
@@ -126,6 +127,12 @@ public class Game extends ApplicationAdapter implements InputProcessor {
 		// establish server connection
 		handler = new NetHandler("127.0.0.1", 27015);
 
+		// if we failed to connect, then close this application
+		if(handler.socket == null) {
+			System.out.println("Failed to connect to server");
+			System.exit(0);
+		}
+
 		// start handling controls
 		Gdx.input.setInputProcessor(this);
 		UIManager.init();
@@ -136,6 +143,8 @@ public class Game extends ApplicationAdapter implements InputProcessor {
 
 	@Override
 	public void render () {
+		ticks++;
+
 		// make a background outside any map the game may have
 		ScreenUtils.clear(1, 0, 0, 1);
 
@@ -269,35 +278,35 @@ public class Game extends ApplicationAdapter implements InputProcessor {
 					if(tank.upgradeFirepower + 1 <= 5) {
 						tank.upgradeFirepower++;
 						tank.upgradePts -= 5;
-						tank.updateStats();
+						tank.handleUpgrades();
 					}
 					break;
 				case Input.Keys.F2:
 					if(tank.upgradeArmor + 1 <= 5) {
 						tank.upgradeArmor++;
 						tank.upgradePts -= 5;
-						tank.updateStats();
+						tank.handleUpgrades();
 					}
 					break;
 				case Input.Keys.F3:
 					if(tank.upgradeHandling + 1 <= 5) {
 						tank.upgradeHandling++;
 						tank.upgradePts -= 5;
-						tank.updateStats();
+						tank.handleUpgrades();
 					}
 					break;
 				case Input.Keys.F4:
 					if(tank.upgradeMobility + 1 <= 5) {
 						tank.upgradeMobility++;
 						tank.upgradePts -= 5;
-						tank.updateStats();
+						tank.handleUpgrades();
 					}
 					break;
 				case Input.Keys.F5:
 					if(tank.upgradeOptics + 1 <= 5) {
 						tank.upgradeOptics++;
 						tank.upgradePts -= 5;
-						tank.updateStats();
+						tank.handleUpgrades();
 					}
 					break;
 			}

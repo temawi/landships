@@ -76,8 +76,33 @@ public class NetReader implements Runnable {
                                 }
                             });
                         }
-
                         break;
+                    case 4:
+                        final int uFirepower = ((Long)object.get("upgrade_firepower")).intValue();
+                        final int uArmor = ((Long)object.get("upgrade_armor")).intValue();
+                        final int uHandling = ((Long)object.get("upgrade_handling")).intValue();
+                        final int uMobility = ((Long)object.get("upgrade_mobility")).intValue();
+                        final int uOptics = ((Long)object.get("upgrade_optics")).intValue();
+
+                        final Tank tank = Game.tanks.get(msgId);
+
+                        if(tank != Game.tank) {
+                            tank.upgradeFirepower = uFirepower;
+                            tank.upgradeArmor = uArmor;
+                            tank.upgradeHandling = uHandling;
+                            tank.upgradeMobility = uMobility;
+                            tank.upgradeOptics = uOptics;
+
+                            Gdx.app.postRunnable(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // do not run handleUpgrades() since we do
+                                    // not want to make a loop of expensive net messages
+                                    tank.updateStats();
+                                    tank.updateTextures();
+                                }
+                            });
+                        }
                 }
             } catch (IOException e) {
                 System.out.println("NetReader: IOException");
