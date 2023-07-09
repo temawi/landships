@@ -1,0 +1,19 @@
+project.ext.mainClassName = "gg.landships.server.Server"
+sourceSets.main.java.srcDirs = [ "src/" ]
+
+import org.gradle.internal.os.OperatingSystem
+
+tasks.register('run', JavaExec) {
+    dependsOn classes
+    mainClass = project.mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    ignoreExitValue = true
+
+    if (OperatingSystem.current() == OperatingSystem.MAC_OS) {
+        // Required to run on macOS
+        jvmArgs += "-XstartOnFirstThread"
+    }
+}
+
+eclipse.project.name = appName + "-desktop"
